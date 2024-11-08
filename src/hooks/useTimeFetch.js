@@ -32,7 +32,7 @@ export function useTimeFetch(url) {
   return { data, loading, error };
 }
 
-//code for App.jsx
+//code for App.js
 
 // import { useState } from "react";
 // import "./App.css";

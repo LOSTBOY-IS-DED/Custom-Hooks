@@ -1,18 +1,21 @@
+// import { useState } from "react";
 import "./App.css";
-import { useFetch } from "./hooks/useFetch";
+// import { usePrev } from "./hooks/usePrev";
+import { useDebounce } from "./hooks/useDebounceHook";
+// import { useFetch } from "./hooks/useFetch";
+// import { useTimeFetch } from "./hooks/useTimeFetch";
 
 function App() {
-  const { data, loading, error } = useFetch(
-    "https://jsonplaceholder.typicode.com/todos/1"
-  );
+  function sendDataToBackend() {
+    fetch("api.amazon.com/search/");
+  }
 
-  if (loading) return <h1>Loading ...</h1>;
-  if (error) console.log(error);
+  const debouncedFn = useDebounce(sendDataToBackend);
 
   return (
     <>
       <div>
-        <h1>{data?.title}</h1>
+        <input onChange={debouncedFn} type="search" />
       </div>
     </>
   );
