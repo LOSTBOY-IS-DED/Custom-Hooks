@@ -1,41 +1,48 @@
-import { useState, useEffect } from "react";
+// Let's write a logic to hit the backend automatically every 10 seconds
+
 import axios from "axios";
+import { useEffect, useState } from "react";
 
-//gtcf
-
-export function useFetch(url) {
+export function useTimeFetch(url) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
+  // Function to fetch data inside the hook
+  const fetchData = async () => {
     setLoading(true);
-    axios
-      .get(url)
-      .then((response) => {
-        setData(response.data);
-      })
-      .catch((err) => {
-        setError(err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [url]);
+    try {
+      const response = await axios.get(url);
+      setData(response.data);
+    } catch (err) {
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData(); // initial fetch
+
+    const intervalId = setInterval(fetchData, 10000); // Fetch every 10 seconds
+
+    return () => clearInterval(intervalId); // Cleanup interval on unmount
+  }, [url]); // only trigger on URL change
 
   return { data, loading, error };
 }
 
-//App.jsx code for playing with this
+//code for App.jsx
 
 // import { useState } from "react";
 // import "./App.css";
-// import { useFetch } from "./hooks/useFetch";
+// // import { useFetch } from "./hooks/useFetch";
+// import { useTimeFetch } from "./hooks/useTimeFetch";
 
 // function App() {
 //   const [button, setButton] = useState(1);
 
-//   const { data, loading, error } = useFetch(
+//   const { data, loading, error } = useTimeFetch(
 //     `https://jsonplaceholder.typicode.com/todos/${button}`
 //   );
 
